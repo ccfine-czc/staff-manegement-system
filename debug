@@ -1,0 +1,1460 @@
+#include<iostream>
+#include<iomanip>
+#include<fstream>
+
+using namespace std;
+
+void menu() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "|欢迎使用职工工资管理系统！ |\n" << endl;
+	cout << "+---添加一个职工信息请按 1 ---+" << endl;
+	cout << "+---显示职工信息请按 2 ---+" << endl;
+	cout << "+--修改职工信息请按 3---+" << endl;
+	cout << "+--删除职工信息请按 4--+" << endl;
+	cout << "+--查询职工信息请按 5--+" << endl;
+	cout << "+---恢复回收站文件请按 6---+" << endl;
+	cout << "+---退出系统请按 7---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu2() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---请输入要修改的职工信息 ---+" << endl;
+	cout << "+---名称请按 1 ---+" << endl;
+	cout << "+---编号请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu3() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---请输入您要添加的职工类 ---+" << endl;
+	cout << "+---正式职工请按 1 ---+" << endl;
+	cout << "+---临时职工请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu4() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---排序输出 ---+" << endl;
+	cout << "+---按编号从小到大输出请按 1 ---+" << endl;
+	cout << "+---按实发工资从高到底输出请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu5() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---查询正式职工请按 1 ---+" << endl;
+	cout << "+---查询临时职工请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu6() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---请输入您要查询的职工信息 ---+" << endl;
+	cout << "+---输入名称请按 1 ---+" << endl;
+	cout << "+---输入编号请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu7() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---请输入您要删除的职工信息 ---+" << endl;
+	cout << "+---输入名称请按 1 ---+" << endl;
+	cout << "+---取消请按 2 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu8() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---逻辑删除请按 1 ---+" << endl;
+	cout << "+---物理删除请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+void menu9() {
+	cout << "+-------------------------------------+\n" << endl;
+	cout << "+---删除正式职工请按 1 ---+" << endl;
+	cout << "+---删除临时职工请按 2 ---+" << endl;
+	cout << "+---取消请按 3 ---+" << endl;
+	cout << "+=====================================+\n" << endl;
+}
+
+class Basestaff {
+protected:
+	int number;
+	string name;
+	string sex;
+	int age;
+	string address;
+	double basic_salary;
+public:
+	Basestaff() {
+		number = 0;
+		name = " ";
+		sex = " ";
+		age = 0;
+		address = " ";
+		basic_salary = 0;
+	}
+	Basestaff(int number, string name,string sex,int age,string address,double basic_salary) {
+		this->number = number;
+		this->name = name;
+		this->sex = sex;
+		this->age = age;
+		this->address = address;
+		this->basic_salary = basic_salary;
+	}
+	void set(int number, string name, string sex, int age, string address, double basic_salary) {
+		this->number = number;
+		this->name = name;
+		this->sex = sex;
+		this->age = age;
+		this->address = address;
+		this->basic_salary = basic_salary;
+	}
+	int get_number() {
+		return number;
+	}
+	string get_name() {
+		return name;
+	}
+	string get_sex() {
+		return sex;
+	}
+	int get_age() {
+		return age;
+	}
+	string get_address() {
+		return address;
+	}
+	double get_basic_salary() {
+		return basic_salary;
+	}
+	/*friend ostream& operator <<(ostream& stream, Basestaff& s) {
+		cout << "编号：" << s.number <<endl<< "姓名：" << s.name <<endl;
+		cout << "性别：" << s.sex << endl << "年龄：" << s.age <<endl;
+		cout << "地址：" << s.address << endl << "基本工资：" << s.basic_salary << endl;
+		return stream;
+	}
+	friend istream& operator >>(istream& stream, Basestaff& s) {
+		cout << "编号：";
+		cin >> s.number;
+		cout << endl;
+		cout << "姓名：";
+		cin >> s.name;
+		cout << endl;
+		cout << "性别：";
+		cin >> s.sex;
+		cout << endl;
+		cout << "年龄：";
+		cin>>s.age;
+		cout << endl;
+		cout << "地址：";
+		cin >> s.address;
+		cout << endl;
+		cout << "基本工资：";
+		cin >> s.basic_salary;
+		cout << endl;
+		return stream;
+	}*/
+};
+
+class Formalstaff :public Basestaff {
+	double postallowance;
+	double pension;
+	double housingfund;
+	double incometax;
+	double medicalinsurance;
+	double paid;
+public:
+	friend class Administor;
+	Formalstaff() :Basestaff() {
+		postallowance = 0;
+		pension = 0;
+		housingfund = 0;
+		incometax = 0;
+		medicalinsurance = 0;
+		paid = 0;
+	}
+	Formalstaff(int number, string name, string sex, int age, string address, double basic_salary,double postallowance, double pension, double housingfund,double incometax, double medicalinsurance ):Basestaff(number,name,sex,age,address,basic_salary){
+		this->postallowance = postallowance;
+		this->pension = pension;
+		this->housingfund = housingfund;
+		this->incometax = incometax;
+		this->medicalinsurance = medicalinsurance;
+		this->paid = basic_salary + postallowance - pension - housingfund - incometax - medicalinsurance;
+	}
+	void setFormol(int number, string name, string sex, int age, string address, double basic_salary,double postallowance, double pension, double housingfund, double incometax, double medicalinsurance){
+		set(number, name, sex, age, address, basic_salary);
+		this->postallowance = postallowance;
+		this->pension = pension;
+		this->housingfund = housingfund;
+		this->incometax = incometax;
+		this->medicalinsurance = medicalinsurance;
+		this->paid = basic_salary + postallowance - pension - housingfund - incometax - medicalinsurance;
+
+	}
+	double get_paid() {
+		return paid;
+	}
+	int get_number() {
+		return number;
+	}
+	friend ostream& operator <<(ostream& stream, Formalstaff& s) {
+		cout << setprecision(1) << setiosflags(ios::fixed);
+		cout << "编号：" << s.number << endl << "姓名：" << s.name << endl;
+		cout << "性别：" << s.sex << endl << "年龄：" << s.age << endl;
+		cout << "地址：" << s.address << endl << "基本工资：" << s.basic_salary << endl;
+		cout << "岗位津贴：" << s.postallowance << endl << "养老金：" << s.pension << endl;
+		cout << "住房公积金：" << s.housingfund << endl << "所得税：" << s.incometax << endl;
+		cout << "医疗保险：" << s.medicalinsurance << endl << "实发工资：" << s.paid << endl;
+		return stream;
+	}
+	friend istream& operator >>(istream& stream, Formalstaff& s) {
+		cout << "编号：";
+		cin >> s.number;
+		cout << "姓名：";
+		cin >> s.name;
+		cout << "性别：";
+		cin >> s.sex;
+		cout << "年龄：";
+		cin >> s.age;
+		cout << "地址：";
+		cin >> s.address;
+		cout << "基本工资：";
+		cin >> s.basic_salary;
+		cout << "岗位津贴：";
+		cin >> s.postallowance;
+		cout << "养老金：";
+		cin >> s.pension;
+		cout << "住房公积金：";
+		cin >> s.housingfund;
+		cout << "所得税：";
+		cin >> s.incometax;
+		cout << "医疗保险：";
+		cin >> s.medicalinsurance;
+		s.paid = s.basic_salary + s.postallowance - s.pension - s.housingfund - s.incometax - s.medicalinsurance;
+		return stream;
+	}
+	friend ofstream & operator <<(ofstream& stream, Formalstaff& s) {
+		if (!stream)
+		{
+			cout << "error" << endl;
+			exit(1);
+		}
+		stream << s.number<<" ";
+		stream << s.name<<" ";
+		stream << s.sex<<" ";
+		stream << s.age<<" ";
+		stream << s.address<<" ";
+		stream << s.basic_salary<<" ";
+		stream << s.postallowance<<" ";
+		stream << s.pension<<" ";
+		stream << s.housingfund<<" ";
+		stream << s.incometax<<" ";
+		stream << s.medicalinsurance<<" ";
+		stream << s.paid << endl;
+		return stream;
+	}
+	friend ifstream& operator >>(ifstream& stream, Formalstaff& s) {
+		if (!stream)
+		{
+			cout << "error" << endl;
+			exit(1);
+		}
+		stream >> s.number;
+		stream >> s.name;
+		stream >> s.sex;
+		stream >> s.age;
+		stream >> s.address;
+		stream >> s.basic_salary;
+		stream >> s.postallowance;
+		stream >> s.pension;
+		stream >> s.housingfund;
+		stream >> s.incometax;
+		stream >> s.medicalinsurance;
+		stream >> s.paid;
+		return stream;
+	}
+};
+
+class Tempstaff :public Basestaff{
+	double bonus;
+	double income_tax; 
+	double paid;
+public:
+	friend class Administor;
+	Tempstaff() :Basestaff() {
+		bonus = 0;
+		income_tax = 0;
+		paid = 0;
+	}
+	Tempstaff(int number, string name, string sex, int age, string address, double basic_salary, double bonus,double income_tax) :Basestaff(number, name, sex, age, address, basic_salary) {
+		this->bonus = bonus;
+		this->income_tax = income_tax;
+		this->paid = basic_salary + bonus - income_tax;
+	}
+	void setTemp(int number, string name, string sex, int age,string address, double basic_salary, double bonus, double income_tax) {
+		set(number, name, sex, age, address, basic_salary);
+		this->bonus = bonus;
+		this->income_tax = income_tax;
+		this->paid = basic_salary + bonus - income_tax;
+	}
+	double get_paid() {
+		return paid;
+	}
+	int get_number() {
+		return number;
+	}
+	friend ostream& operator <<(ostream& stream, Tempstaff& s) {
+		cout << setprecision(1) << setiosflags(ios::fixed);
+		cout << "编号：" << s.number << endl << "姓名：" << s.name << endl;
+		cout << "性别：" << s.sex << endl << "年龄：" << s.age << endl;
+		cout << "地址：" << s.address << endl << "基本工资：" << s.basic_salary << endl;
+		cout << "奖金：" << s.bonus << endl << "所得税：" << s.income_tax << endl;
+		cout << "实发工资：" << s.paid << endl;
+		return stream;
+	}
+	friend istream& operator >>(istream& stream, Tempstaff& s) {
+		cout << "编号：";
+		cin >> s.number;
+		cout << "姓名：";
+		cin >> s.name;
+		cout << "性别：";
+		cin >> s.sex;
+		cout << "年龄：";
+		cin >> s.age;
+		cout << "地址：";
+		cin >> s.address;
+		cout << "基本工资：";
+		cin >> s.basic_salary;
+		cout << "奖金：";
+		cin >> s.bonus;
+		cout << "所得税：";
+		cin >> s.income_tax;
+		s.paid = s.basic_salary + s.bonus - s.income_tax;
+		cout << endl;
+		return stream;
+	}
+	friend ofstream& operator <<(ofstream& stream, Tempstaff& s) {
+		if (!stream)
+		{
+			cout << "error" << endl;
+			exit(1);
+		}
+		stream << s.number << " ";
+		stream << s.name << " ";
+		stream << s.sex << " ";
+		stream << s.age << " ";
+		stream << s.address << " ";
+		stream << s.basic_salary << " ";
+		stream << s.bonus << " ";
+		stream << s.income_tax << " ";
+		stream << s.paid <<endl;
+		return stream;
+	}
+	friend ifstream& operator >>(ifstream& stream, Tempstaff& s) {
+		if (!stream)
+		{
+			cout << "error" << endl;
+			exit(1);
+		}
+		stream >> s.number;
+		stream >> s.name;
+		stream >> s.sex;
+		stream >> s.age;
+		stream >> s.address;
+		stream >> s.bonus;
+		stream >> s.income_tax;
+		stream >> s.paid;
+		return stream;
+	}
+};
+
+typedef struct node1 {
+	Formalstaff data;
+	struct node1* next;
+}Node1;
+
+typedef struct node2 {
+	Tempstaff data;
+	struct node2* next;
+}Node2;
+
+class Administor {
+public:
+	Formalstaff inputonef() {
+		Formalstaff s;
+		cout << "编号：";
+		cin >> s.number;
+		cout << "姓名：";
+		cin >> s.name;
+		cout << "性别：";
+		cin >> s.sex;
+		cout << "年龄：";
+		cin >> s.age;
+		cout << "地址：";
+		cin >> s.address;
+		cout << "基本工资：";
+		cin >> s.basic_salary;
+		cout << "岗位津贴：";
+		cin >> s.postallowance;
+		cout << "养老金：";
+		cin >> s.pension;
+		cout << "住房公积金：";
+		cin >> s.housingfund;
+		cout << "所得税：";
+		cin >> s.incometax;
+		cout << "医疗保险：";
+		cin >> s.medicalinsurance;
+		s.paid = s.basic_salary + s.postallowance - s.pension - s.housingfund - s.incometax - s.medicalinsurance;
+		return s;
+	}
+	Tempstaff inputonet() {
+		Tempstaff s;
+		cout << "编号：";
+		cin >> s.number;
+		cout << "姓名：";
+		cin >> s.name;
+		cout << "性别：";
+		cin >> s.sex;
+		cout << "年龄：";
+		cin >> s.age;
+		cout << "地址：";
+		cin >> s.address;
+		cout << "基本工资：";
+		cin >> s.basic_salary;
+		cout << "奖金：";
+		cin >> s.bonus;
+		cout << "所得税：";
+		cin >> s.income_tax;
+		s.paid = s.basic_salary + s.bonus - s.income_tax;
+		return s;
+	}
+	Node1* get_head1() {
+		Node1* head = NULL;
+		Node1* list = NULL;
+		Formalstaff temp;
+		ifstream ifile("d:/Formalstaff.txt", ios::out);
+		if (!ifile)
+		{
+			cout << "打开失败" << endl;
+			return NULL;
+		}
+		while (ifile >> temp) {
+			Node1* node = new Node1;
+			node->data = temp;
+			node->next = NULL;
+			if (head == NULL)
+			{
+				head = node;
+				head->next = NULL;
+			}
+			else if (list == NULL)
+			{
+				list = node;
+				head->next = list;
+				list->next = NULL;
+			}
+			else
+			{
+				list->next = node;
+				list = list->next;
+				list->next = NULL;
+			}
+		}
+		ifile.close();
+		return head;
+	}
+	Node2* get_head2() {
+		Node2* head = NULL;
+		Node2* list = NULL;
+		Tempstaff temp;
+		ifstream ifile("d:/Tempstaff.txt", ios::out);
+		if (!ifile)
+		{
+			cout << "打开失败" << endl;
+			return NULL;
+		}
+		while (ifile >> temp) {
+			Node2* node = new Node2;
+			node->data = temp;
+			node->next = NULL;
+			if (head == NULL)
+			{
+				head = node;
+				head->next = NULL;
+			}
+			else if (list == NULL)
+			{
+				list = node;
+				head->next = list;
+				list->next = NULL;
+			}
+			else
+			{
+				list->next = node;
+				list = list->next;
+				list->next = NULL;
+			}
+		}
+		ifile.close();
+		return head;
+	}
+	Node1* get_thead1() {
+		Node1* head = NULL;
+		Node1* list = NULL;
+		Formalstaff temp;
+		ifstream ifile("d:/Tformalstaff.txt", ios::out);
+		if (!ifile)
+		{
+			cout << "打开失败" << endl;
+			return NULL;
+		}
+		while (ifile >> temp) {
+			Node1* node = new Node1;
+			node->data = temp;
+			node->next = NULL;
+			if (head == NULL)
+			{
+				head = node;
+				head->next = NULL;
+			}
+			else if (list == NULL)
+			{
+				list = node;
+				head->next = list;
+				list->next = NULL;
+			}
+			else
+			{
+				list->next = node;
+				list = list->next;
+				list->next = NULL;
+			}
+		}
+		ifile.close();
+		return head;
+	}
+	Node2* get_thead2() {
+		Node2* head = NULL;
+		Node2* list = NULL;
+		Tempstaff temp;
+		ifstream ifile("d:/Ttempstaff.txt", ios::out);
+		if (!ifile)
+		{
+			cout << "打开失败" << endl;
+			return NULL;
+		}
+		while (ifile >> temp) {
+			Node2* node = new Node2;
+			node->data = temp;
+			node->next = NULL;
+			if (head == NULL)
+			{
+				head = node;
+				head->next = NULL;
+			}
+			else if (list == NULL)
+			{
+				list = node;
+				head->next = list;
+				list->next = NULL;
+			}
+			else
+			{
+				list->next = node;
+				list = list->next;
+				list->next = NULL;
+			}
+		}
+		ifile.close();
+		return head;
+	}
+	void add() {
+		system("cls");
+	a:	menu3();
+		int order;
+		cin >> order;
+		switch (order) {
+		case 1: 
+		{
+			Formalstaff s = inputonef();
+			ofstream ofile("d:/Formalstaff.txt", ios::app);
+			if (!ofile)
+			{
+				cout << "打开失败" << endl;
+				return;
+			}
+			ofile << s;
+			ofile.close(); 
+			break;
+		}
+		case 2:
+		{
+			Tempstaff s = inputonet();
+			ofstream ofile("d:/Tempstaff.txt", ios::app);
+			if (!ofile)
+			{
+				cout << "打开失败" << endl;
+				return;
+			}
+			ofile << s;
+			ofile.close();
+			break;
+		}
+		case 3:
+			break;
+		default:
+			cout << "错误指令，请重新输入：" << endl;
+			goto a;
+		}
+	} 
+	void swapf(Formalstaff& f1, Formalstaff& f2) {
+		Formalstaff temp = f1;
+		f1 = f2;
+		f2 = temp;
+	}
+	void swapt(Tempstaff& f1, Tempstaff& f2) {
+		Tempstaff temp = f1;
+		f1 = f2;
+		f2 = temp;
+	}
+	void save(Node1*head) {
+		ofstream ofile("d:/Formalstaff.txt", ios::in);
+		if (!ofile)
+		{
+			cout << "打开失败" << endl;
+			return;
+		}
+		while (head) {
+			ofile << head->data;
+			head = head->next;
+		}
+		ofile.close();
+	}
+	void save(Node2* head) {
+		ofstream ofile("d:/Tempstaff.txt", ios::in);
+		if (!ofile)
+		{
+			cout << "打开失败" << endl;
+			return;
+		}
+		while (head) {
+			ofile << head->data;
+			head = head->next;
+		}
+		ofile.close();
+	}
+	void showf_inpaid(Node1*head) {
+		Node1* tph = NULL;
+		Node1* tpl = NULL;
+		
+		while (head) {
+			Node1* node = new Node1;
+			node->data = head->data;
+			if (tph == NULL)
+			{
+				tph = node;
+				tph->next = NULL;
+			}
+			else if (tpl == NULL)
+			{
+				tpl = node;
+				tpl->next = NULL;
+				tph->next = tpl;
+			}
+			else {
+				tpl->next = node;
+				tpl = tpl->next;
+				tpl->next = NULL;
+			}
+			head = head->next;
+		}
+		if (tph == NULL) {
+			cout << "暂无信息" << endl;
+			return;
+		}
+		for (Node1* h = tph; h != NULL && h->next != NULL; h = h->next)
+		{
+			for (Node1* now = h->next; now != NULL; now = now->next)
+			{
+				if (h->data.get_paid() < now->data.get_paid())
+					swapf(h->data, now->data);
+			}
+		}
+		while (tph)
+		{
+			cout << tph->data << endl;
+			tph = tph->next;
+		}
+	}
+	void showf_innumber(Node1*head) {
+		Node1* tph = NULL;
+		Node1* tpl = NULL;
+
+		while (head) {
+			Node1* node = new Node1;
+			node->data = head->data;
+			if (tph == NULL)
+			{
+				tph = node;
+				tph->next = NULL;
+			}
+			else if (tpl == NULL)
+			{
+				tpl = node;
+				tpl->next = NULL;
+				tph->next = tpl;
+			}
+			else {
+				tpl->next = node;
+				tpl = tpl->next;
+				tpl->next = NULL;
+			}
+			head = head->next;
+		}
+		if (tph == NULL) {
+			cout << "暂无信息" << endl;
+			return;
+		}
+		for (Node1* h = tph; h != NULL && h->next != NULL; h = h->next)
+		{
+			for (Node1* now = h->next; now != NULL; now = now->next)
+			{
+				if (h->data.get_number() > now->data.get_number())
+					swapf(h->data, now->data);
+			}
+		}
+		while (tph)
+		{
+			cout << tph->data << endl;
+			tph = tph->next;
+		}
+	}
+	void showt_inpaid(Node2* head) {
+		Node2* tph = NULL;
+		Node2* tpl = NULL;
+
+		while (head) {
+			Node2* node = new Node2;
+			node->data = head->data;
+			if (tph == NULL)
+			{
+				tph = node;
+				tph->next = NULL;
+			}
+			else if (tpl == NULL)
+			{
+				tpl = node;
+				tpl->next = NULL;
+				tph->next = tpl;
+			}
+			else {
+				tpl->next = node;
+				tpl = tpl->next;
+				tpl->next = NULL;
+			}
+			head = head->next;
+		}
+		if (tph == NULL) {
+			cout << "暂无信息" << endl;
+			return;
+		}
+		for (Node2* h = tph; h != NULL && h->next != NULL; h = h->next)
+		{
+			for (Node2* now = h->next; now != NULL; now = now->next)
+			{
+				if (h->data.get_paid() < now->data.get_paid())
+					swapt(h->data, now->data);
+			}
+		}
+		while (tph)
+		{
+			cout << tph->data << endl;
+			tph = tph->next;
+		}
+	}
+	void showt_innumber(Node2* head) {
+		Node2* tph = NULL;
+		Node2* tpl = NULL;
+
+		while (head) {
+			Node2* node = new Node2;
+			node->data = head->data;
+			if (tph == NULL)
+			{
+				tph = node;
+				tph->next = NULL;
+			}
+			else if (tpl == NULL)
+			{
+				tpl = node;
+				tpl->next = NULL;
+				tph->next = tpl;
+			}
+			else {
+				tpl->next = node;
+				tpl = tpl->next;
+				tpl->next = NULL;
+			}
+			head = head->next;
+		}
+		if (tph == NULL) {
+			cout << "暂无信息" << endl;
+			return;
+		}
+		for (Node2* h = tph; h != NULL && h->next != NULL; h = h->next)
+		{
+			for (Node2* now = h->next; now != NULL; now = now->next)
+			{
+				if (h->data.get_number() > now->data.get_number())
+					swapt(h->data, now->data);
+			}
+		}
+		while (tph)
+		{
+			cout << tph->data << endl;
+			tph = tph->next;
+		}
+	}
+	void show() {
+		Node1* head = NULL;
+		Node2* head2 = NULL;
+	b:	menu5();
+		int order;
+		cin >> order;
+		switch (order) {
+		case 1: {
+			head = get_head1();
+		c:	system("cls");
+			Node1* tp = head;
+			menu4();
+			int order2;
+			cin >> order2;
+			switch (order2) {
+			case 1:
+				showf_innumber(tp);
+				break;
+			case 2:
+				showf_inpaid(tp);
+				break;
+			case 3:
+				break;
+			default:
+				cout << "错误指令，请重新输入：" << endl;
+				goto c;
+			}
+				  break;
+		}
+		case 2: {
+			head2 = get_head2();
+		d:	system("cls");
+			menu4();
+			Node2* tp = head2;
+			int order2;
+			cin >> order2;
+			switch (order2) {
+			case 1:
+				showt_innumber(tp);
+				break;
+			case 2:
+				showt_inpaid(tp);
+				break;
+			case 3:
+				break;
+			default:
+				cout << "错误指令，请重新输入：" << endl;
+				goto d;
+			}
+			break;
+		}
+		case 3:
+			break;
+		default:
+			cout << "输入错误，请重新输入" << endl;
+			goto b;
+		}
+	}
+	void showone() {
+		system("cls");
+	h:	menu5();
+		int order;
+		cin >> order;
+		switch (order) {
+		case 1:
+		{
+			Node1* head = get_head1();
+			system("cls");
+		e:	menu6();
+			int order2;
+			cin >> order2;
+			switch (order2) {
+			case 1:
+			{
+				string name;
+				cout << "请输入您要查找职工的名称" << endl;
+				cin >> name;
+				Node1* tp = head;
+				while (tp) {
+					if (tp->data.name == name)
+					{
+						cout << "查找成功！" << endl;
+						cout << tp->data << endl;
+						break;
+					}
+					tp = tp->next;
+				}
+				if (tp == NULL)
+					cout << "查无此人" << endl;
+				break; 
+			}
+			case 2:
+			{
+				int number;
+				cout << "请输入您要查找职工的编号" << endl;
+				cin >> number;
+				Node1* tp = head;
+				while (tp) {
+					if (tp->data.number == number)
+					{
+						cout << "查找成功！" << endl;
+						cout << tp->data << endl;
+						break;
+					}
+					tp = tp->next;
+				}
+				if (tp == NULL)
+					cout << "查找失败！" << endl;
+				break; 
+			}
+			case 3:
+				break;
+			default:
+				cout << "错误指令，请重新输入：" << endl;
+				goto e;
+			}
+			break;
+		}
+		case 2:
+		{
+			Node2* head = get_head2();
+			system("cls");
+		f:	menu6();
+			int order3;
+			cin >> order3;
+			switch (order3) {
+			case 1:
+			{
+				string name;
+				cout << "请输入您要查找职工的名称" << endl;
+				cin >> name;
+				Node2* tp = head;
+				while (tp) {
+					if (tp->data.name == name)
+					{
+						cout << "查找成功！" << endl;
+						cout << tp->data << endl;
+						break;
+					}
+					tp = tp->next;
+				}
+				if (tp == NULL)
+					cout << "查无此人" << endl;
+				break;
+			}
+			case 2:
+			{
+				int number;
+				cout << "请输入您要查找职工的编号" << endl;
+				cin >> number;
+				Node2* tp = head;
+				while (tp) {
+					if (tp->data.number == number)
+					{
+						cout << "查找成功！" << endl;
+						cout << tp->data << endl;
+						break;
+					}
+					tp = tp->next;
+				}
+				if (tp == NULL)
+					cout << "查找失败！" << endl;
+				break;
+			}
+			case 3:
+				break;
+			default:
+				cout << "错误指令，请重新输入：" << endl;
+				goto f;
+			}
+			break;
+		}
+		
+		case 3:
+			break;
+		default:
+			cout << "错误指令，请重新输入：" << endl;
+			goto h;
+		}
+	}
+	void change() {
+		Formalstaff temp;
+		Node1* head = NULL;
+		Node1* list = NULL;
+		ifstream ifile("d:/Formalstaff.txt", ios::out);
+		if (!ifile)
+		{
+			cout << "打开失败" << endl;
+			return;
+		}
+		while (ifile >> temp) {
+			Node1* node = new Node1;
+			node->data = temp;
+			node->next = NULL;
+			if (head == NULL)
+			{
+				head = node;
+			}
+			else if (list == NULL)
+			{
+				list = node;
+				head->next = list;
+			}
+			else
+			{
+				list->next = node;
+				list = list->next;
+			}
+		}
+		ifile.close();
+		system("cls");
+	p:	menu2();
+		int order;
+		cin >> order;
+		switch (order) {
+		case 1:
+		{
+		string tname;
+		cout << "请输入您要查找的姓名" << endl;
+		cin >> tname;
+		Node1* tp = head;
+		while (tp)
+		{
+			if (tp->data.name == tname)
+			{
+				cout << "查找成功" << endl;
+				cout << tp->data;
+				cout << "请输入您要修改的信息" << endl;
+				Formalstaff s = inputonef();
+				tp->data = s;
+				tp = head;
+				save(tp);
+				cout << "修改成功!" << endl;
+				break;
+			}
+			else
+			    tp = tp->next;
+		}
+		if (tp == NULL)
+		{
+			cout << "您输入的信息不存在" << endl;
+		}
+		break;
+		}
+		case 2:
+		{
+		int tid;
+		cout << "请输入您要修改职工的编号" << endl;
+		cin >> tid;
+		Node1* tp = head;
+		while (tp)
+		{
+			if (tp->data.number == tid)
+			{
+				cout << "请输入您要的修改信息" << endl;
+				Formalstaff s = inputonef();
+				tp->data = s;
+				tp = head;
+				save(tp);
+				cout << "修改成功!" << endl;
+				break;
+			}
+			else
+			    tp = tp->next;
+		}
+		if (tp == NULL)
+		{
+			cout << "您输入的信息不存在" << endl;
+		}
+		break;
+		}
+		case 3:
+		{
+			return;
+		}
+		default:
+			cout << "输入错误，请重新输入" << endl;
+			goto p;
+		}
+	}
+	void recover() {
+		Node1* head = get_thead1();
+		if (head)
+		{
+			ofstream ofile("d:/Formalstaff.txt", ios::app);
+			if (!ofile)
+			{
+				cout << "打开失败" << endl;
+				return;
+			}
+			while (head)
+			{
+				ofile << head->data;
+				head = head->next;
+			}
+			ofile.close();
+		}
+		fstream file("d:/Tformalstaff.txt", ios::out);
+		if (!file)
+		{
+			cout << "打开失败" << endl;
+			return;
+		}
+		file.close();
+		Node2* head2 = get_thead2();
+		if (head2)
+		{
+			ofstream ofile2("d:/Tempstaff.txt", ios::app);
+			if (!ofile2)
+			{
+				cout << "打开失败" << endl;
+				return;
+			}
+			while (head2)
+			{
+				ofile2 << head2->data;
+				head2 = head2->next;
+			}
+			ofile2.close();
+		}
+		fstream file2("d:/Ttempstaff.txt", ios::out);
+		if (!file2)
+		{
+			cout << "打开失败" << endl;
+			return;
+		}
+		file2.close();
+	}
+	void delet() {
+	    system("cls");
+	i:	menu9();
+		int order;
+		cin >> order;
+		switch (order) {
+		case 1:
+		{
+		j:  menu7();
+			int order2;
+			cin >> order2;
+			switch (order2) {
+			case 1:
+			{
+				cout << "请输入您要查找职工的姓名：" << endl;
+				string name;
+				cin >> name;
+				Node1* tp = get_head1();
+				Node1* thead = tp;
+				int sign;
+				if (tp && tp->data.name == name)
+				{
+					sign = 0;
+					cout << "查找成功！" << endl;
+				}
+				else if (tp) {
+					sign = 1;
+					while (tp->next)
+					{
+						if (tp->next->data.name == name)
+							break;
+						tp = tp->next;
+					}
+					if (tp->next == NULL)
+					{
+						cout << "查无此人！" << endl;
+						break;
+					}
+					else {
+						cout << "查找成功！" << endl;
+					}
+				}
+				else
+				{
+					cout << "查无此人" << endl;
+					break;
+				}
+			k:	menu8();
+				Formalstaff temp;
+				int order3;
+				cin >> order3;
+				if (!sign) {
+					temp = tp->data;
+					thead = tp->next;
+				}
+				else {
+					temp = tp->next->data;
+					tp->next = tp->next->next;
+				}
+				switch (order3) {
+				case 1:
+				{
+					fstream file("d:/Formalstaff.txt", ios::out);
+					if (!file)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					file.close();
+					ofstream ofile("d:/Formalstaff.txt", ios::app);
+					if (!ofile)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					while (thead)
+					{
+						ofile << thead->data;
+						thead = thead->next;
+					}
+					ofile.close();
+					ofstream ofile2("d:/Tformalstaff.txt", ios::app);
+					if (!ofile2) {
+						cout << "打开失败" << endl;
+						return;
+					}
+					ofile2 << temp;
+					ofile2.close();
+					break;
+				}
+				case 2:
+				{
+					fstream file("d:/Formalstaff.txt", ios::out);
+					if (!file)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					file.close();
+					ofstream ofile("d:/Formalstaff.txt", ios::in);
+					if (!ofile)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					while (thead)
+					{
+						ofile << thead->data;
+						thead = thead->next;
+					}
+					ofile.close();
+					break;
+				}
+				case 3:
+				{
+					break;
+				}
+				default:
+					cout << "错误指令！请重新输入：" << endl;
+					goto k;
+				}
+				break;
+			}
+			case 2:
+				break;
+			default:
+				cout << "错误指令！请重新输入：" << endl;
+				goto j;
+			}
+			break;
+		}
+		case 2:
+		{
+		o:  menu7();
+			int order2;
+			cin >> order2;
+			switch (order2) {
+			case 1:
+			{
+				cout << "请输入您要查找职工的姓名：" << endl;
+				string name;
+				cin >> name;
+				Node2* tp = get_head2();
+				Node2* thead = tp;
+				int sign;
+				if (tp && tp->data.name == name)
+				{
+					sign = 0;
+					cout << "查找成功！" << endl;
+				}
+				else if (tp) {
+					sign = 1;
+					while (tp->next)
+					{
+						if (tp->next->data.name == name)
+							break;
+						tp = tp->next;
+					}
+					if (tp->next == NULL)
+					{
+						cout << "查无此人！" << endl;
+						break;
+					}
+					else {
+						cout << "查找成功！" << endl;
+					}
+				}
+				else
+				{
+					cout << "查无此人" << endl;
+					break;
+				}
+			r:	menu8();
+				Tempstaff temp;
+				int order3;
+				cin >> order3;
+				if (!sign) {
+					temp = tp->data;
+					thead = tp->next;
+				}
+				else {
+					temp = tp->next->data;
+					tp->next = tp->next->next;
+				}
+				switch (order3) {
+				case 1:
+				{
+					fstream file("d:/Tempstaff.txt", ios::out);
+					if (!file)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					file.close();
+					ofstream ofile("d:/Tempstaff.txt", ios::app);
+					if (!ofile)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					while (thead)
+					{
+						ofile << thead->data;
+						thead = thead->next;
+					}
+					ofile.close();
+					ofstream ofile2("d:/Ttempstaff.txt", ios::app);
+					if (!ofile2) {
+						cout << "打开失败" << endl;
+						return;
+					}
+					ofile2 << temp;
+					ofile2.close();
+					break;
+				}
+				case 2:
+				{
+					fstream file("d:/Tempstaff.txt", ios::out);
+					if (!file)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					file.close();
+					ofstream ofile("d:/Tempstaff.txt", ios::in);
+					if (!ofile)
+					{
+						cout << "打开失败" << endl;
+						return;
+					}
+					while (thead)
+					{
+						ofile << thead->data;
+						thead = thead->next;
+					}
+					ofile.close();
+					break;
+				}
+				case 3:
+				{
+					break;
+				}
+				default:
+					cout << "错误指令！请重新输入：" << endl;
+					goto r;
+				}
+				break;
+			}
+			case 2:
+				break;
+			default:
+				cout << "错误指令！请重新输入：" << endl;
+				goto j;
+			}
+			break;
+		}
+		case 3:
+		{
+			break;
+		}
+		default:
+			cout << "错误指令！请重新输入：" << endl;
+			goto i;
+		}
+	}
+};
+
+int main() 
+{
+	system("color f0");
+	Administor s;
+	int order;
+	while (true) {
+		menu();
+		cin >> order;
+		switch (order) {
+		case 1:
+			system("cls");
+			s.add();
+			break;
+		case 2:
+			system("cls");
+			s.show();
+			break;
+		case 3:
+			system("cls");
+			s.change();
+			break;
+		case 4:
+			system("cls");
+			s.delet();
+			break;
+		case 5:
+			s.showone();
+			break;
+		case 6:
+			s.recover();
+			break;
+		case 7:
+			return 0;
+		default:
+			cout << "error" << endl;
+			break;
+		}
+	}
+}
